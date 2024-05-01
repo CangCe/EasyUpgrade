@@ -1,0 +1,10 @@
+{
+  "Name": "EasyUpgrade",
+  "Author": "Senofu",
+  "Version": "1.0.0",
+  "Description": "test",
+  "UniqueID": "Senofu.EasyUpgrade",
+  "EntryDll": "EasyUpgrade.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": []
+}
