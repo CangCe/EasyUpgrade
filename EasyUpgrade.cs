@@ -15,6 +15,10 @@ namespace EasyUpgrade
         public int magnification { get; set; } = 5;
         //设置触发热键
         public KeybindList ToggleKey { get; set; } = KeybindList.Parse("J");
+
+        public bool UpgradeWhenPicked { get; set; } = false;
+
+        public bool DeductMoneyWhenPicked { get; set; } = false;
     }
     public class ModEntry : Mod
     {
@@ -28,12 +32,10 @@ namespace EasyUpgrade
         {
 
             this.Config = this.Helper.ReadConfig<ModConfig>();
-            //int magnification = this.Config.magnification;
-            //KeybindList toggleKey = this.Config.ToggleKey;
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-            //意思是将 OnButtonPressed 方法绑定到 SMAPI 的 ButtonPressed 按钮按下事件
-            //this 表示本对象，也就是当前的 ModEntry 类
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
+            helper.Events.Player.InventoryChanged += this.OnInventoryChanged;
+
 
         }
 
@@ -43,6 +45,40 @@ namespace EasyUpgrade
         /// <summary>在玩家按下键盘、控制器或鼠标上的按钮后引发</summary>
         /// <param name="sender">对象 sender 表示调用此方法的对象</param>
         /// <param name="e">对象 e 表示事件数据</param>
+
+        private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
+        {
+            // 这个事件会在玩家背包发生任何变化时触发
+            // e.Added 是一个包含所有新添加物品的列表
+            // e.Removed 是一个包含所有移除物品的列表
+
+            // 遍历新添加的物品
+            foreach (Item item in e.Added)
+            {
+                // 这里可以检查物品是否是您希望改变品质的物品
+                // 如果是，将物品的品质设置为铱星品质
+                if (item is StardewValley.Object)
+                {
+                    //当物品品质不为4时，升级为铱星
+
+                    if (item.Quality != 4 && this.Config.UpgradeWhenPicked && this.CanUpgradeItem(item))
+                    {
+                        StardewValley.Object obj = (StardewValley.Object)item;
+
+                        int upgradeCost = 2 * obj.Stack * obj.Price * this.Config.magnification;
+                        if (Game1.player.Money >= upgradeCost)
+                        {
+                            if (this.Config.DeductMoneyWhenPicked)
+                                Game1.player.Money -= upgradeCost;
+                            item.Quality = 4;
+
+                        }
+                        else;
+                    }
+
+                }
+            }
+        }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
@@ -59,19 +95,41 @@ namespace EasyUpgrade
                 );
 
             // add some config options
+            configMenu.AddSectionTitle(
+                mod: this.ModManifest, 
+                text :() => "EasyUpgrade"
+                );
             configMenu.AddNumberOption(
                 mod: this.ModManifest,
-                name: () => "提升星级所需金钱倍率",
-                tooltip: () => "提升星级所需金钱倍率",
+                name: () => "Penalty coefficient",
+                tooltip: () => "Penalty coefficient",
                 getValue: () => this.Config.magnification,
                 setValue: value => this.Config.magnification = value
                 );
             configMenu.AddKeybindList(
                 mod: this.ModManifest,
-                name: () => "提升星级热键",
-                tooltip: () => "提升星级热键",
+                name: () => "Toggle Key",
+                tooltip: () => "Toggle Key",
                 getValue: () => this.Config.ToggleKey,
                 setValue: value => this.Config.ToggleKey = value
+                );
+            configMenu.AddSectionTitle(
+                mod: this.ModManifest,
+                text: () => "EasyUpgrade"
+                );
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Auto Upgrade When Pick",
+                tooltip: () => "Auto Upgrade When Pick",
+                getValue: () => this.Config.UpgradeWhenPicked,
+                setValue: value => this.Config.UpgradeWhenPicked = value
+                );
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Deduct Money When Auto Upgrade",
+                tooltip: () => "Deduct Money When Auto Upgrade",
+                getValue: () => this.Config.DeductMoneyWhenPicked,
+                setValue: value => this.Config.DeductMoneyWhenPicked = value
                 );
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
@@ -82,9 +140,8 @@ namespace EasyUpgrade
             //读取热键
             if (this.Config.ToggleKey.JustPressed() && Game1.player != null && Game1.player.CurrentItem != null)
             {
-                //this.Monitor.Log($"玩家[{Game1.player.Name}]持有着 [{Game1.player.CurrentItem.Name}]共[{Game1.player.CurrentItem.Stack}]个,品质为[{Game1.player.CurrentItem.Quality}].", LogLevel.Debug);
+                Game1.addHUDMessage(new HUDMessage("提升星级", 2));
                 Item nowItem = Game1.player.CurrentItem;
-                //判断物品是否是蔬菜、水果、花卉、鱼类、蛋类、奶类、采集品
 
                 if (this.CanUpgradeItem(nowItem))
                 {
@@ -110,10 +167,16 @@ namespace EasyUpgrade
                     | obj.Category == StardewValley.Object.artisanGoodsCategory)
                     return obj.Quality != 4;
                 else
+                {
+                    Game1.addHUDMessage(new HUDMessage("该物品不可升级", 2));
                     return false;
+                }
             }
             else
+            {
+                Game1.addHUDMessage(new HUDMessage("该物品不可升级", 2));
                 return false;
+            }
         }
 
         private void UpgradeItemQuality(Item item)
@@ -122,19 +185,18 @@ namespace EasyUpgrade
             if (item is StardewValley.Object)
             {
                 StardewValley.Object obj = (StardewValley.Object)item;
-                if(obj.Quality != 2)
-                    obj.Quality++;
+                if(obj.Quality != 2){
+                    obj.Quality++;}
                 else
                     obj.Quality = 4;
-
-            }   
+                Game1.addHUDMessage(new HUDMessage($"成功提升物品星级为{obj.Quality}", 1));
+            }
         }
 
         private void DeductMoneyForUpgrade(Item item)
         {
             // 计算升级所需的金钱
             int upgradeCost = this.CalculateUpgradeCost(item);
-            //this.Monitor.Log($"需扣除{upgradeCost}G", LogLevel.Info);
 
             // 检查玩家是否有足够的金钱
             if (Game1.player.Money >= upgradeCost)
@@ -142,7 +204,12 @@ namespace EasyUpgrade
                 // 扣除金钱
                 Game1.player.Money -= upgradeCost;
                 this.UpgradeItemQuality(item);
+                Game1.addHUDMessage(new HUDMessage($"共花费{upgradeCost}G", 1));
+
             }
+            else;
+                Game1.addHUDMessage(new HUDMessage($"余额不足，需{upgradeCost}G", 2));
+
         }
 
         private int CalculateUpgradeCost(Item item)
