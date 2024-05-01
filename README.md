@@ -8,6 +8,10 @@ Total money deducted = Number of items * Base value of the item * Item quality c
 
 The penalty coefficient and hotkey can be configured using the GMCM (Generic Mod Config Menu).
 
+
+
+
+
 # 简单升星
 
 ## 使用
@@ -17,3 +21,11 @@ The penalty coefficient and hotkey can be configured using the GMCM (Generic Mod
 扣除金钱总额 = 物品数\*物品基础价值\*物品星级系数\*惩罚系数
 
 惩罚系数及热键可使用GMCM进行配置
+
+
+
+
+
+## ToDo
+
+- [ ] 在画面内添加升星信息提示
