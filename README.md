@@ -6,7 +6,7 @@ Press the hotkey (default is "J") to deduct money to upgrade the quality of the 
 
 Total money deducted = Number of items * Base value of the item * Item quality coefficient * Penalty coefficient.
 
-The penalty coefficient and hotkey can be configured using the GMCM (Generic Mod Config Menu).
+The penalty coefficient and hotkey can be configured using the [GMCM (Generic Mod Config Menu)](https://www.nexusmods.com/stardewvalley/mods/5098).
 
 
 
@@ -20,7 +20,7 @@ The penalty coefficient and hotkey can be configured using the GMCM (Generic Mod
 
 扣除金钱总额 = 物品数\*物品基础价值\*物品星级系数\*惩罚系数
 
-惩罚系数及热键可使用GMCM进行配置
+惩罚系数及热键可使用[GMCM](https://www.nexusmods.com/stardewvalley/mods/5098)进行配置
 
 
 

@@ -1,10 +1,9 @@
 {
-  "Name": "EasyUpgrade",
+  "Name": "Easy Upgrade",
   "Author": "Senofu",
-  "Version": "1.0.0",
-  "Description": "test",
+  "Version": "1.0.2",
+  "Description": "Deduct money to upgrade the quality of the item in hand.",
   "UniqueID": "Senofu.EasyUpgrade",
   "EntryDll": "EasyUpgrade.dll",
-  "MinimumApiVersion": "4.0.0",
-  "UpdateKeys": []
+  "UpdateKeys": [ "Nexus:23496" ]
 }

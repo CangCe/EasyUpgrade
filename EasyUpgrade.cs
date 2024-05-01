@@ -82,7 +82,7 @@ namespace EasyUpgrade
             //读取热键
             if (this.Config.ToggleKey.JustPressed() && Game1.player != null && Game1.player.CurrentItem != null)
             {
-                this.Monitor.Log($"玩家[{Game1.player.Name}]持有着 [{Game1.player.CurrentItem.Name}]共[{Game1.player.CurrentItem.Stack}]个,品质为[{Game1.player.CurrentItem.Quality}].", LogLevel.Debug);
+                //this.Monitor.Log($"玩家[{Game1.player.Name}]持有着 [{Game1.player.CurrentItem.Name}]共[{Game1.player.CurrentItem.Stack}]个,品质为[{Game1.player.CurrentItem.Quality}].", LogLevel.Debug);
                 Item nowItem = Game1.player.CurrentItem;
                 //判断物品是否是蔬菜、水果、花卉、鱼类、蛋类、奶类、采集品
 
@@ -92,7 +92,6 @@ namespace EasyUpgrade
                 }
 
             }
-            // 向控制台输出按下了什么按钮
         }
         private bool CanUpgradeItem(Item item)
         {
@@ -135,7 +134,7 @@ namespace EasyUpgrade
         {
             // 计算升级所需的金钱
             int upgradeCost = this.CalculateUpgradeCost(item);
-            this.Monitor.Log($"需扣除{upgradeCost}G", LogLevel.Info);
+            //this.Monitor.Log($"需扣除{upgradeCost}G", LogLevel.Info);
 
             // 检查玩家是否有足够的金钱
             if (Game1.player.Money >= upgradeCost)
@@ -143,14 +142,11 @@ namespace EasyUpgrade
                 // 扣除金钱
                 Game1.player.Money -= upgradeCost;
                 this.UpgradeItemQuality(item);
-                //this.Monitor.Log($"{item.Name} 的星级已提升，扣除了 {upgradeCost} 金钱。", LogLevel.Info);
             }
-            //else this.Monitor.Log("金钱不足，无法提升星级。", LogLevel.Info);
         }
 
         private int CalculateUpgradeCost(Item item)
         {
-            // 这里可以根据物品的属性计算升级所需的金钱
             if (item is StardewValley.Object)
             {
                 StardewValley.Object obj = (StardewValley.Object)item;
@@ -168,7 +164,6 @@ namespace EasyUpgrade
                     (coeLookup.TryGetValue(Q, out float tempCoe)) coe = tempCoe;
                 else 
                     coe = 1.0f;
-                //this.Monitor.Log($"目前星级倍率为{coe}", LogLevel.Info);
 
                 return (int)(price * coe ) * obj.Stack * this.Config.magnification;
 
