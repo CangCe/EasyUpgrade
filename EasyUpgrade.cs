@@ -19,6 +19,25 @@ namespace EasyUpgrade
         public bool UpgradeWhenPicked { get; set; } = false;
 
         public bool DeductMoneyWhenPicked { get; set; } = false;
+
+        public bool HUDMessage { get; set; } = false;
+        public bool Mineral { get; set; } = false;
+        public bool Fish { get; set; } = false;
+        public bool AnimalProduct { get; set; } = false;
+        public bool Cooking { get; set; } = false;
+        public bool Resource { get; set; } = false;
+        public bool Fertilizer { get; set; } = false;
+        public bool Trash { get; set; } = false;
+        public bool Bait { get; set; } = false;
+        public bool FishingTackle { get; set; } = false;
+        public bool ArtisanGoods { get; set; } = false;
+        public bool MonsterLoot { get; set; } = false;
+        public bool Seed { get; set; } = false;
+        public bool Vegetable { get; set; } = false;
+        public bool Fruit { get; set; } = false;
+        public bool Flower { get; set; } = false;
+        public bool Forage { get; set; } = false;
+
     }
     public class ModEntry : Mod
     {
@@ -30,13 +49,10 @@ namespace EasyUpgrade
         /// <param name="helper">对象 helper 提供用于编写模组的简化接口</param>
         public override void Entry(IModHelper helper)
         {
-
             this.Config = this.Helper.ReadConfig<ModConfig>();
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             helper.Events.Player.InventoryChanged += this.OnInventoryChanged;
-
-
         }
 
         /*********
@@ -48,34 +64,27 @@ namespace EasyUpgrade
 
         private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
         {
-            // 这个事件会在玩家背包发生任何变化时触发
-            // e.Added 是一个包含所有新添加物品的列表
-            // e.Removed 是一个包含所有移除物品的列表
-
             // 遍历新添加的物品
             foreach (Item item in e.Added)
             {
+                // 在控制台输出调试信息
+                // this.Monitor.Log($"玩家获得了物品 {item.Name}。");
                 // 这里可以检查物品是否是您希望改变品质的物品
                 // 如果是，将物品的品质设置为铱星品质
                 if (item is StardewValley.Object)
                 {
                     //当物品品质不为4时，升级为铱星
-
                     if (item.Quality != 4 && this.Config.UpgradeWhenPicked && this.CanUpgradeItem(item))
                     {
                         StardewValley.Object obj = (StardewValley.Object)item;
-
                         int upgradeCost = 2 * obj.Stack * obj.Price * this.Config.magnification;
-                        if (Game1.player.Money >= upgradeCost)
+                        if (Game1.player.Money >= upgradeCost && this.Config.DeductMoneyWhenPicked)
                         {
-                            if (this.Config.DeductMoneyWhenPicked)
-                                Game1.player.Money -= upgradeCost;
-                            item.Quality = 4;
-
+                            Game1.player.Money -= upgradeCost;
                         }
-                        else;
+                        Game1.player.removeItemFromInventory(item);
+                        Game1.player.addItemByMenuIfNecessary((Item)new StardewValley.Object(obj.ItemId, obj.Stack, false, -1, 4));
                     }
-
                 }
             }
         }
@@ -94,43 +103,184 @@ namespace EasyUpgrade
                 save: () => this.Helper.WriteConfig(this.Config)
                 );
 
-            // add some config options
+            //Section 1
             configMenu.AddSectionTitle(
-                mod: this.ModManifest, 
-                text :() => "EasyUpgrade"
+                mod: this.ModManifest,
+                text: () => "Easy Upgrade"
                 );
             configMenu.AddNumberOption(
                 mod: this.ModManifest,
                 name: () => "Penalty coefficient",
-                tooltip: () => "Penalty coefficient",
+                tooltip: () => "The coefficient of money deducted for upgrading items.",
                 getValue: () => this.Config.magnification,
                 setValue: value => this.Config.magnification = value
                 );
             configMenu.AddKeybindList(
                 mod: this.ModManifest,
                 name: () => "Toggle Key",
-                tooltip: () => "Toggle Key",
+                tooltip: () => "The key to be pressed for an upgrade.",
                 getValue: () => this.Config.ToggleKey,
                 setValue: value => this.Config.ToggleKey = value
                 );
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "HUD Message",
+                tooltip: () => "If enabled, there will be several message if you press \"ToggleKey\".",
+                getValue: () => this.Config.HUDMessage,
+                setValue: value => this.Config.HUDMessage = value
+                );
+            //Section 2
             configMenu.AddSectionTitle(
                 mod: this.ModManifest,
-                text: () => "EasyUpgrade"
+                text: () => "Auto Upgrade"
                 );
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
                 name: () => "Auto Upgrade When Pick",
-                tooltip: () => "Auto Upgrade When Pick",
+                tooltip: () => "If enabled, picked-up items will automatically upgrade.",
                 getValue: () => this.Config.UpgradeWhenPicked,
                 setValue: value => this.Config.UpgradeWhenPicked = value
                 );
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
                 name: () => "Deduct Money When Auto Upgrade",
-                tooltip: () => "Deduct Money When Auto Upgrade",
+                tooltip: () => "If enabled, picked-up items will deduct money.",
                 getValue: () => this.Config.DeductMoneyWhenPicked,
                 setValue: value => this.Config.DeductMoneyWhenPicked = value
                 );
+            //Section 3
+            configMenu.AddSectionTitle(
+                mod: this.ModManifest,
+                text: () => "Category Options"
+                );
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Mineral",
+                tooltip: () => "Enable or disable Mineral options",
+                getValue: () => this.Config.Mineral,
+                setValue: value => this.Config.Mineral = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Fish",
+                tooltip: () => "Enable or disable Fish options",
+                getValue: () => this.Config.Fish,
+                setValue: value => this.Config.Fish = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Animal Product",
+                tooltip: () => "Enable or disable Animal Product options",
+                getValue: () => this.Config.AnimalProduct,
+                setValue: value => this.Config.AnimalProduct = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Cooking",
+                tooltip: () => "Enable or disable Cooking options",
+                getValue: () => this.Config.Cooking,
+                setValue: value => this.Config.Cooking = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Resource",
+                tooltip: () => "Enable or disable Resource options",
+                getValue: () => this.Config.Resource,
+                setValue: value => this.Config.Resource = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Fertilizer",
+                tooltip: () => "Enable or disable Fertilizer options",
+                getValue: () => this.Config.Fertilizer,
+                setValue: value => this.Config.Fertilizer = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Trash",
+                tooltip: () => "Enable or disable Trash options",
+                getValue: () => this.Config.Trash,
+                setValue: value => this.Config.Trash = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Bait",
+                tooltip: () => "Enable or disable Bait options",
+                getValue: () => this.Config.Bait,
+                setValue: value => this.Config.Bait = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Fishing Tackle",
+                tooltip: () => "Enable or disable Fishing Tackle options",
+                getValue: () => this.Config.FishingTackle,
+                setValue: value => this.Config.FishingTackle = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "ArtisanGoods",
+                tooltip: () => "Enable or disable Artisan Goods options",
+                getValue: () => this.Config.ArtisanGoods,
+                setValue: value => this.Config.ArtisanGoods = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "MonsterLoot",
+                tooltip: () => "Enable or disable Monster Loot options",
+                getValue: () => this.Config.MonsterLoot,
+                setValue: value => this.Config.MonsterLoot = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Seed",
+                tooltip: () => "Enable or disable Seed options",
+                getValue: () => this.Config.Seed,
+                setValue: value => this.Config.Seed = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Vegetable",
+                tooltip: () => "Enable or disable Vegetable options",
+                getValue: () => this.Config.Vegetable,
+                setValue: value => this.Config.Vegetable = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Fruit",
+                tooltip: () => "Enable or disable Fruit options",
+                getValue: () => this.Config.Fruit,
+                setValue: value => this.Config.Fruit = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Flower",
+                tooltip: () => "Enable or disable Flower options",
+                getValue: () => this.Config.Flower,
+                setValue: value => this.Config.Flower = value
+                );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Forage",
+                tooltip: () => "Enable or disable Forage options",
+                getValue: () => this.Config.Forage,
+                setValue: value => this.Config.Forage = value
+                );
+
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
@@ -140,41 +290,57 @@ namespace EasyUpgrade
             //读取热键
             if (this.Config.ToggleKey.JustPressed() && Game1.player != null && Game1.player.CurrentItem != null)
             {
-                Game1.addHUDMessage(new HUDMessage("提升星级", 2));
                 Item nowItem = Game1.player.CurrentItem;
-
                 if (this.CanUpgradeItem(nowItem))
                 {
+
                     this.DeductMoneyForUpgrade(nowItem);
                 }
-
             }
         }
         private bool CanUpgradeItem(Item item)
         {
-
-            if(item is StardewValley.Object)
+            if (item is StardewValley.Object && item.Quality < 4)
             {
                 StardewValley.Object obj = (StardewValley.Object)item;
-                if (obj.Category == StardewValley.Object.VegetableCategory 
-                    | obj.Category == StardewValley.Object.FruitsCategory 
-                    | obj.Category == StardewValley.Object.flowersCategory 
-                    | obj.Category == StardewValley.Object.FishCategory 
-                    | obj.Category == StardewValley.Object.EggCategory 
-                    | obj.Category == StardewValley.Object.MilkCategory 
-                    | obj.Category == StardewValley.Object.GreensCategory 
-                    | obj.Category == StardewValley.Object.GreensCategory
-                    | obj.Category == StardewValley.Object.artisanGoodsCategory)
+                int cat = obj.Category;
+                if (this.Config.Mineral && (cat == -2 || cat == -12))
                     return obj.Quality != 4;
-                else
-                {
-                    Game1.addHUDMessage(new HUDMessage("该物品不可升级", 2));
-                    return false;
-                }
+                else if (this.Config.Fish && (cat ==  -4))
+                    return obj.Quality != 4;
+                else if (this.Config.AnimalProduct && (cat == -5 || cat == -6 || cat == -18 ))
+                    return obj.Quality != 4;
+                else if (this.Config.Cooking && (cat == -7  || cat == -25 ))
+                    return obj.Quality != 4;
+                else if (this.Config.Resource && (cat == -15 || cat == -16))
+                    return obj.Quality != 4;
+                else if (this.Config.Fertilizer && (cat ==  -19 ))
+                    return obj.Quality != 4;
+                else if (this.Config.Trash && (cat == -20 ))
+                    return obj.Quality != 4;
+                else if (this.Config.Bait &&( cat == -21))
+                    return obj.Quality != 4;
+                else if (this.Config.FishingTackle && (cat == -22))
+                    return obj.Quality != 4;
+                else if (this.Config.ArtisanGoods && (cat == -26 || cat == -27))
+                    return obj.Quality != 4;
+                else if (this.Config.MonsterLoot && (cat == -28))
+                    return obj.Quality != 4;
+                else if (this.Config.Seed && (cat == -74))
+                    return obj.Quality != 4;
+                else if (this.Config.Vegetable && (cat == -75))
+                    return obj.Quality != 4;
+                else if (this.Config.Fruit && (cat == -79))
+                    return obj.Quality != 4;
+                else if (this.Config.Flower && (cat == -80))
+                    return obj.Quality != 4;
+                else if (this.Config.Forage && (cat == -81))
+                    return obj.Quality != 4;
+                else return false;
             }
             else
             {
-                Game1.addHUDMessage(new HUDMessage("该物品不可升级", 2));
+                if (this.Config.HUDMessage)  Game1.addHUDMessage(new HUDMessage("This item cannot be upgraded.", 2));
                 return false;
             }
         }
@@ -185,11 +351,19 @@ namespace EasyUpgrade
             if (item is StardewValley.Object)
             {
                 StardewValley.Object obj = (StardewValley.Object)item;
-                if(obj.Quality != 2){
-                    obj.Quality++;}
-                else
+                if (obj.Quality != 2 && obj.Quality < 4)
+                {
+                    obj.Quality++;
+                }
+                else if (obj.Quality == 2)
+                {
                     obj.Quality = 4;
-                Game1.addHUDMessage(new HUDMessage($"成功提升物品星级为{obj.Quality}", 1));
+                }
+                else
+                {
+                    if (this.Config.HUDMessage)  Game1.addHUDMessage(new HUDMessage("The item has achieved the highest quality.", 2));
+                }
+
             }
         }
 
@@ -204,11 +378,11 @@ namespace EasyUpgrade
                 // 扣除金钱
                 Game1.player.Money -= upgradeCost;
                 this.UpgradeItemQuality(item);
-                Game1.addHUDMessage(new HUDMessage($"共花费{upgradeCost}G", 1));
+                if (this.Config.HUDMessage)  Game1.addHUDMessage(new HUDMessage($"Successfully upgraded the item to {item.Quality}, at a cost of {upgradeCost}G.", 1));
 
             }
-            else;
-                Game1.addHUDMessage(new HUDMessage($"余额不足，需{upgradeCost}G", 2));
+            else
+                if (this.Config.HUDMessage)  Game1.addHUDMessage(new HUDMessage($"Insufficient balance, {upgradeCost}G required.", 2));
 
         }
 
@@ -217,7 +391,7 @@ namespace EasyUpgrade
             if (item is StardewValley.Object)
             {
                 StardewValley.Object obj = (StardewValley.Object)item;
-                int Q = obj.Quality+1;
+                int Q = obj.Quality + 1;
 
                 float coe;
                 int price = obj.Price;
@@ -227,12 +401,12 @@ namespace EasyUpgrade
                     {2, 1.5f},
                     {3, 2.0f}
                 };
-                if 
+                if
                     (coeLookup.TryGetValue(Q, out float tempCoe)) coe = tempCoe;
-                else 
+                else
                     coe = 1.0f;
 
-                return (int)(price * coe ) * obj.Stack * this.Config.magnification;
+                return (int)(price * coe) * obj.Stack * this.Config.magnification;
 
             }
             else
