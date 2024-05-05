@@ -12,31 +12,33 @@ namespace EasyUpgrade
     /// <summary>模组入口点</summary>
     public sealed class ModConfig
     {
+        //惩罚系数
         public int magnification { get; set; } = 5;
         //设置触发热键
         public KeybindList ToggleKey { get; set; } = KeybindList.Parse("J");
-
+        //设置拾取物品时是否自动升级
         public bool UpgradeWhenPicked { get; set; } = false;
-
+        //设置拾取物品时是否扣除金钱
         public bool DeductMoneyWhenPicked { get; set; } = false;
-
+        //设置是否显示HUD信息
         public bool HUDMessage { get; set; } = false;
-        public bool Mineral { get; set; } = false;
-        public bool Fish { get; set; } = false;
-        public bool AnimalProduct { get; set; } = false;
-        public bool Cooking { get; set; } = false;
-        public bool Resource { get; set; } = false;
-        public bool Fertilizer { get; set; } = false;
-        public bool Trash { get; set; } = false;
-        public bool Bait { get; set; } = false;
-        public bool FishingTackle { get; set; } = false;
-        public bool ArtisanGoods { get; set; } = false;
-        public bool MonsterLoot { get; set; } = false;
-        public bool Seed { get; set; } = false;
-        public bool Vegetable { get; set; } = false;
-        public bool Fruit { get; set; } = false;
-        public bool Flower { get; set; } = false;
-        public bool Forage { get; set; } = false;
+        //设置物品类别
+        public bool Mineral { get; set; } = false; //矿石
+        public bool Fish { get; set; } = false; //鱼类
+        public bool AnimalProduct { get; set; } = false; //动物产品
+        public bool Cooking { get; set; } = false; //烹饪
+        public bool Resource { get; set; } = false; //资源
+        public bool Fertilizer { get; set; } = false; //肥料
+        public bool Trash { get; set; } = false; //垃圾
+        public bool Bait { get; set; } = false; //鱼饵
+        public bool FishingTackle { get; set; } = false; //鱼竿配件
+        public bool ArtisanGoods { get; set; } = false; //工艺品
+        public bool MonsterLoot { get; set; } = false; //怪物掉落
+        public bool Seed { get; set; } = false; //种子
+        public bool Vegetable { get; set; } = false; //蔬菜
+        public bool Fruit { get; set; } = false; //水果
+        public bool Flower { get; set; } = false; //花卉
+        public bool Forage { get; set; } = false; //采集物
 
     }
     public class ModEntry : Mod
@@ -68,7 +70,6 @@ namespace EasyUpgrade
             foreach (Item item in e.Added)
             {
                 // 在控制台输出调试信息
-                // this.Monitor.Log($"玩家获得了物品 {item.Name}。");
                 // 这里可以检查物品是否是您希望改变品质的物品
                 // 如果是，将物品的品质设置为铱星品质
                 if (item is StardewValley.Object)
@@ -293,7 +294,6 @@ namespace EasyUpgrade
                 Item nowItem = Game1.player.CurrentItem;
                 if (this.CanUpgradeItem(nowItem))
                 {
-
                     this.DeductMoneyForUpgrade(nowItem);
                 }
             }
@@ -413,6 +413,12 @@ namespace EasyUpgrade
             {
                 return 0;
             }
+        }
+        
+        private void ShowHUDMessage(string message, int duration = 1)
+        {
+            if (this.Config.HUDMessage)
+                Game1.addHUDMessage(new HUDMessage(message, duration));
         }
     }
 
