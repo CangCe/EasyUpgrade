@@ -97,190 +97,192 @@ namespace EasyUpgrade
             if (configMenu is null)
                 return;
 
-            // register mod
             configMenu.Register(
                 mod: this.ModManifest,
                 reset: () => this.Config = new ModConfig(),
                 save: () => this.Helper.WriteConfig(this.Config)
-                );
+            );
 
-            //Section 1
+            // Section 1
             configMenu.AddSectionTitle(
                 mod: this.ModManifest,
-                text: () => "Easy Upgrade"
-                );
+                text: () => this.Helper.Translation.Get("GMCM.section1.sectionTitle")
+            );
             configMenu.AddNumberOption(
                 mod: this.ModManifest,
-                name: () => "Penalty coefficient",
-                tooltip: () => "The coefficient of money deducted for upgrading items.",
+                name: () => this.Helper.Translation.Get("GMCM.section1.magnification"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.magnificationCoefficient"), // Updated key for tooltip
                 getValue: () => this.Config.magnification,
                 setValue: value => this.Config.magnification = value
-                );
+            );
             configMenu.AddKeybindList(
                 mod: this.ModManifest,
-                name: () => "Toggle Key",
-                tooltip: () => "The key to be pressed for an upgrade.",
+                name: () => this.Helper.Translation.Get("GMCM.section1.toggleKey"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.toggleKeyForUpgrade"), // Updated key for tooltip
                 getValue: () => this.Config.ToggleKey,
                 setValue: value => this.Config.ToggleKey = value
-                );
+            );
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "HUD Message",
-                tooltip: () => "If enabled, there will be several message if you press \"ToggleKey\".",
+                name: () => this.Helper.Translation.Get("GMCM.section1.hudMessage"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.HUDMessagesOnToggle"), // Updated key for tooltip
                 getValue: () => this.Config.HUDMessage,
                 setValue: value => this.Config.HUDMessage = value
-                );
-            //Section 2
+            );
+
+            // Section 2
             configMenu.AddSectionTitle(
                 mod: this.ModManifest,
-                text: () => "Auto Upgrade"
-                );
+                text: () => this.Helper.Translation.Get("GMCM.section2.sectionTitle")
+            );
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Auto Upgrade When Pick",
-                tooltip: () => "If enabled, picked-up items will automatically upgrade.",
+                name: () => this.Helper.Translation.Get("GMCM.section2.pickUpgrade"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.autoUpgradeOnPick"), // Updated key for tooltip
                 getValue: () => this.Config.UpgradeWhenPicked,
                 setValue: value => this.Config.UpgradeWhenPicked = value
-                );
+            );
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Deduct Money When Auto Upgrade",
-                tooltip: () => "If enabled, picked-up items will deduct money.",
+                name: () => this.Helper.Translation.Get("GMCM.section2.deductPick"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.deductMoneyOnAutoUpgrade"), // Updated key for tooltip
                 getValue: () => this.Config.DeductMoneyWhenPicked,
                 setValue: value => this.Config.DeductMoneyWhenPicked = value
-                );
+            );
             //Section 3
+            // Section 3
             configMenu.AddSectionTitle(
                 mod: this.ModManifest,
-                text: () => "Category Options"
-                );
+                text: () => this.Helper.Translation.Get("GMCM.section3.sectionTitle")
+            );
+
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Mineral",
-                tooltip: () => "Enable or disable Mineral options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Mineral"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Mineral"),
                 getValue: () => this.Config.Mineral,
                 setValue: value => this.Config.Mineral = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Fish",
-                tooltip: () => "Enable or disable Fish options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Fish"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Fish"),
                 getValue: () => this.Config.Fish,
                 setValue: value => this.Config.Fish = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Animal Product",
-                tooltip: () => "Enable or disable Animal Product options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.AnimalProduct"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.AnimalProduct"),
                 getValue: () => this.Config.AnimalProduct,
                 setValue: value => this.Config.AnimalProduct = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Cooking",
-                tooltip: () => "Enable or disable Cooking options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Cooking"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Cooking"),
                 getValue: () => this.Config.Cooking,
                 setValue: value => this.Config.Cooking = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Resource",
-                tooltip: () => "Enable or disable Resource options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Resource"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Resource"),
                 getValue: () => this.Config.Resource,
                 setValue: value => this.Config.Resource = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Fertilizer",
-                tooltip: () => "Enable or disable Fertilizer options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Fertilizer"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Fertilizer"),
                 getValue: () => this.Config.Fertilizer,
                 setValue: value => this.Config.Fertilizer = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Trash",
-                tooltip: () => "Enable or disable Trash options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Trash"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Trash"),
                 getValue: () => this.Config.Trash,
                 setValue: value => this.Config.Trash = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Bait",
-                tooltip: () => "Enable or disable Bait options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Bait"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Bait"),
                 getValue: () => this.Config.Bait,
                 setValue: value => this.Config.Bait = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Fishing Tackle",
-                tooltip: () => "Enable or disable Fishing Tackle options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.FishingTackle"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.FishingTackle"),
                 getValue: () => this.Config.FishingTackle,
                 setValue: value => this.Config.FishingTackle = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "ArtisanGoods",
-                tooltip: () => "Enable or disable Artisan Goods options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.ArtisanGoods"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.ArtisanGoods"),
                 getValue: () => this.Config.ArtisanGoods,
                 setValue: value => this.Config.ArtisanGoods = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "MonsterLoot",
-                tooltip: () => "Enable or disable Monster Loot options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.MonsterLoot"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.MonsterLoot"),
                 getValue: () => this.Config.MonsterLoot,
                 setValue: value => this.Config.MonsterLoot = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Seed",
-                tooltip: () => "Enable or disable Seed options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Seed"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Seed"),
                 getValue: () => this.Config.Seed,
                 setValue: value => this.Config.Seed = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Vegetable",
-                tooltip: () => "Enable or disable Vegetable options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Vegetable"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Vegetable"),
                 getValue: () => this.Config.Vegetable,
                 setValue: value => this.Config.Vegetable = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Fruit",
-                tooltip: () => "Enable or disable Fruit options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Fruit"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Fruit"),
                 getValue: () => this.Config.Fruit,
                 setValue: value => this.Config.Fruit = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Flower",
-                tooltip: () => "Enable or disable Flower options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Flower"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Flower"),
                 getValue: () => this.Config.Flower,
                 setValue: value => this.Config.Flower = value
-                );
+            );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Forage",
-                tooltip: () => "Enable or disable Forage options",
+                name: () => this.Helper.Translation.Get("GMCM.section3.Forage"),
+                tooltip: () => this.Helper.Translation.Get("GMCM.tooltip.Forage"),
                 getValue: () => this.Config.Forage,
                 setValue: value => this.Config.Forage = value
-                );
+            );
 
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
@@ -340,7 +342,10 @@ namespace EasyUpgrade
             }
             else
             {
-                if (this.Config.HUDMessage)  Game1.addHUDMessage(new HUDMessage("This item cannot be upgraded.", 2));
+                if(item.Quality == 4) 
+                    ShowHUDMessage(this.Helper.Translation.Get("HUDMessage.highestQuality"));
+                else
+                    ShowHUDMessage(this.Helper.Translation.Get("HUDMessage.cantUpgrade"));
                 return false;
             }
         }
@@ -361,7 +366,7 @@ namespace EasyUpgrade
                 }
                 else
                 {
-                    if (this.Config.HUDMessage)  Game1.addHUDMessage(new HUDMessage("The item has achieved the highest quality.", 2));
+                    ShowHUDMessage(this.Helper.Translation.Get("HUDMessage.highestQuality"));
                 }
 
             }
@@ -378,11 +383,11 @@ namespace EasyUpgrade
                 // 扣除金钱
                 Game1.player.Money -= upgradeCost;
                 this.UpgradeItemQuality(item);
-                if (this.Config.HUDMessage)  Game1.addHUDMessage(new HUDMessage($"Successfully upgraded the item to {item.Quality}, at a cost of {upgradeCost}G.", 1));
+                ShowHUDMessage(this.Helper.Translation.Get("HUDMessage.succeedUpgrade",new {upgradeCost = upgradeCost}));
 
             }
             else
-                if (this.Config.HUDMessage)  Game1.addHUDMessage(new HUDMessage($"Insufficient balance, {upgradeCost}G required.", 2));
+                ShowHUDMessage(this.Helper.Translation.Get("HUDMessage.notEnoughbalance", new { upgradeCost = upgradeCost }));
 
         }
 
