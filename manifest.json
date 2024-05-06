@@ -1,7 +1,7 @@
 {
   "Name": "Easy Upgrade",
   "Author": "Senofu",
-  "Version": "1.1.0",
+  "Version": "1.2.0",
   "Description": "Deduct money to upgrade the quality of the item in hand.",
   "UniqueID": "Senofu.EasyUpgrade",
   "EntryDll": "EasyUpgrade.dll",
